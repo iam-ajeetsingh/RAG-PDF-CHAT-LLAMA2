@@ -1,0 +1,73 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag_ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+
+  ollama-init:
+    image: ollama/ollama:latest
+    container_name: rag_ollama_init
+    depends_on:
+      ollama:
+        condition: service_started
+    volumes:
+      - ./ollama:/root/.ollama
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "Waiting for Ollama API to be ready..."
+        for i in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
+          if wget -q --spider http://ollama:11434/api/tags 2>/dev/null || curl -s -f http://ollama:11434/api/tags > /dev/null 2>&1; then
+            echo "Ollama API is ready!"
+            break
+          fi
+          echo "Waiting... ($i/15)"
+          sleep 2
+        done
+        echo "Pulling llama2 model..."
+        OLLAMA_HOST=http://ollama:11434 ollama pull llama2
+        echo "Model pulled successfully!"
+
+  rag-server:
+    build: .
+    container_name: rag_server
+    depends_on:
+      ollama:
+        condition: service_started
+      ollama-init:
+        condition: service_completed_successfully
+    environment:
+      OLLAMA_URL: http://ollama:11434/api/generate
+      OLLAMA_MODEL: llama2
+      RAG_PDF_DIR: /data/pdfs
+      CHROMA_PATH: /data/chromadb
+      RAG_QUERY_TOP_K: 3
+      NVIDIA_VISIBLE_DEVICES: all
+    volumes:
+      - ./sample_pdfs:/data/pdfs
+      - ./chromadb_store:/data/chromadb
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+

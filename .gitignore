@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# ChromaDB (vector database - contains your indexed data)
+chromadb_store/
+*.sqlite3
+*.sqlite3-*
+
+# Ollama (model files - too large for GitHub)
+ollama/
+*.bin
+
+# PDF files (user's documents - might be private)
+sample_pdfs/*.pdf
+!sample_pdfs/.gitkeep
+
+# Docker
+.dockerignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp

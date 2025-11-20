@@ -1,0 +1,18 @@
+torch                # (conda will optimize the appropriate package for your GPU)
+transformers>=4.36.0
+sentence-transformers>=2.2.2
+langchain>=0.1.14
+chromadb>=0.4.22
+pypdf>=3.0.0
+accelerate>=0.25.0
+fpdf>=1.7.2
+chromadb
+
+fastapi
+uvicorn
+gradio
+
+
+# ollama and llama-cpp-python are commented, see below for Llama 2 options
+ollama  # For easy Llama 2 serving if you prefer using ollama
+# llama-cpp-python[server]
