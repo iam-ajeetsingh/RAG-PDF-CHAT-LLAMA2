@@ -1,5 +1,9 @@
 # RAG PDF Chat Application
 
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-green.svg)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 An end-to-end Retrieval-Augmented Generation (RAG) application that allows you to query your PDF documents using a local LLM (Llama 2) running on your GPU.
 
 ## Features
